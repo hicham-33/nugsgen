@@ -73,9 +73,9 @@
 <script type="importmap">
 {
   "imports": {
-    "framer-motion": "https://esm.sh/framer-motion@^12.23.26",
     "react/": "https://esm.sh/react@^19.2.3/",
     "react": "https://esm.sh/react@^19.2.3",
+    "framer-motion": "https://esm.sh/framer-motion@^12.24.5",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
   }
 }
@@ -100,7 +100,7 @@
 
         const ASSETS = {
             GOLD_NUGS: 'https://i.postimg.cc/XvjB1nkF/1767136242712-019b7185-2946-7098-b41f-65df473a4623-removebg-preview.png',
-            RARE_EGG: 'https://i.postimg.cc/MTYP26Ck/1767135774116-019b717f-9a1d-7b45-90bb-4407c89113be.jpg'
+            SWOOPJAW: 'https://i.postimg.cc/4N3FBHcp/1767702439496-019b9346-4745-7cad-b849-5344b3a6311b-removebg-preview.png'
         };
 
         const STEPS = [
@@ -182,7 +182,7 @@
                 username: '',
                 platform: 'Quest',
                 nugs: 1000,
-                rareEgg: false,
+                swoopjaw: false,
             });
 
             const [isProcessing, setIsProcessing] = useState(false);
@@ -243,7 +243,7 @@
                             <div className="opacity-50">Initializing connection...</div>
                             <div className="opacity-70">Target: {config.username} [{config.platform}]</div>
                             <div className="opacity-80">Injecting {config.nugs} Gold Nugs...</div>
-                            {config.rareEgg && <div className="opacity-90 text-yellow-400">Unlock Sequence: RARE_EGG...</div>}
+                            {config.swoopjaw && <div className="opacity-90 text-yellow-400">Unlock Sequence: SWOOPJAW...</div>}
                             <div className="text-white">&gt; {statusText}</div>
                         </div>
 
@@ -318,20 +318,20 @@
                         </div>
 
                         <div 
-                            onClick={() => setConfig({...config, rareEgg: !config.rareEgg})}
-                            className={`cursor-pointer p-4 rounded-xl border transition-all flex items-center justify-between group ${config.rareEgg ? 'bg-gradient-to-r from-purple-900/50 to-brand-dark border-brand-neon/50' : 'bg-black/20 border-white/5'}`}
+                            onClick={() => setConfig({...config, swoopjaw: !config.swoopjaw})}
+                            className={`cursor-pointer p-4 rounded-xl border transition-all flex items-center justify-between group ${config.swoopjaw ? 'bg-gradient-to-r from-purple-900/50 to-brand-dark border-brand-neon/50' : 'bg-black/20 border-white/5'}`}
                         >
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-lg overflow-hidden bg-black/50 border border-white/10 p-1">
-                                    <img src={ASSETS.RARE_EGG} className="w-full h-full object-cover" alt="Rare Egg" />
+                                    <img src={ASSETS.SWOOPJAW} className="w-full h-full object-contain" alt="Swoopjaw" />
                                 </div>
                                 <div className="text-left">
-                                    <div className={`font-bold text-sm ${config.rareEgg ? 'text-white' : 'text-gray-400'}`}>Unlock Rare Egg</div>
+                                    <div className={`font-bold text-sm ${config.swoopjaw ? 'text-white' : 'text-gray-400'}`}>Unlock Swoopjaw</div>
                                     <div className="text-xs text-gray-500">Legendary Item</div>
                                 </div>
                             </div>
-                            <div className={`w-12 h-6 rounded-full p-1 transition-colors ${config.rareEgg ? 'bg-brand-neon' : 'bg-gray-700'}`}>
-                                <div className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform ${config.rareEgg ? 'translate-x-6' : 'translate-x-0'}`} />
+                            <div className={`w-12 h-6 rounded-full p-1 transition-colors ${config.swoopjaw ? 'bg-brand-neon' : 'bg-gray-700'}`}>
+                                <div className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform ${config.swoopjaw ? 'translate-x-6' : 'translate-x-0'}`} />
                             </div>
                         </div>
 
@@ -387,7 +387,7 @@
                             <p className="text-gray-400 mb-6 text-sm leading-relaxed">
                                 Automatic bot prevention has flagged this request. Please complete a quick human verification to release your 
                                 <span className="text-brand-gold font-bold mx-1">Gold Nugs</span> and 
-                                <span className="text-brand-neon font-bold mx-1">Rare Egg</span>.
+                                <span className="text-brand-neon font-bold mx-1">Swoopjaw</span>.
                             </p>
 
                             <div className="bg-black/30 rounded-xl p-3 mb-6 flex items-center gap-3 border border-white/5">
@@ -440,12 +440,12 @@
                             style={{ left: '10%' }}
                         />
                         <motion.img 
-                            src={ASSETS.RARE_EGG}
-                            alt="Rare Egg"
-                            className="absolute w-28 h-28 object-cover rounded-full border-2 border-brand-neon/50 z-0 drop-shadow-[0_0_15px_rgba(0,243,255,0.4)]"
+                            src={ASSETS.SWOOPJAW}
+                            alt="Swoopjaw"
+                            className="absolute w-32 h-32 object-contain z-0 drop-shadow-[0_0_15px_rgba(0,243,255,0.4)]"
                             animate={{ y: [10, -10, 10], scale: [1, 1.05, 1] }}
                             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                            style={{ right: '10%' }}
+                            style={{ right: '5%' }}
                         />
                     </div>
 
